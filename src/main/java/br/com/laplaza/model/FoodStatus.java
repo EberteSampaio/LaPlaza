@@ -33,7 +33,7 @@ public class FoodStatus {
 
     public boolean updateData(@Valid FoodStatusUpdateData foodStatusUpdate) {
 
-        if((foodStatusUpdate.shortName() == null) && (foodStatusUpdate.description() == null)){
+        if((foodStatusUpdate.shortName() == null) || (foodStatusUpdate.description() == null)){
             return false;
         }
 

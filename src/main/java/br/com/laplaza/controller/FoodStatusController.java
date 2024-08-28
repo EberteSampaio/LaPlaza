@@ -14,8 +14,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
-import java.lang.module.ResolutionException;
-
 
 @RestController
 @RequestMapping("/food-status")
@@ -52,6 +50,38 @@ public class FoodStatusController {
         }
 
         return ResponseEntity.ok("Os dados do status da comida foram atualizados.");
+    }
+
+    @GetMapping("/find/{shortName}")
+    public FoodStatus findFoodStatusByShortName(String shortName) throws Exception {
+
+        FoodStatus foodStatusByshortName  = null;
+
+        if(shortName == null)
+            throw new Exception("Não é aceito valores nulos. Informe o nome curto.");
+
+        foodStatusByshortName = this.foodStatusRepository.getReferenceByShortName(shortName);
+
+        if(foodStatusByshortName == null)
+            throw new Exception("Não foi encontrado um Status com o nome curto "+ shortName +".");
+
+        return  foodStatusByshortName;
+    }
+
+    @GetMapping("/find/{id}")
+    public FoodStatus findFoodStatusById(Long id) throws Exception {
+
+        FoodStatus foodStatusById  = null;
+
+        if(id == null)
+            throw new Exception("Não é aceito valores nulos");
+
+        foodStatusById = this.foodStatusRepository.getReferenceById(id);
+
+        if(foodStatusById == null)
+            throw new Exception("Não foi encontrado um Status com o id "+ id);
+
+        return  foodStatusById;
     }
 
     @Transactional
