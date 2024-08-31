@@ -14,6 +14,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Optional;
+
 
 @RestController
 @RequestMapping("/food-status")
@@ -38,14 +40,16 @@ public class FoodStatusController {
     }
 
     @Transactional
-    @PutMapping("/update")
-    public ResponseEntity<String> update(@RequestBody @Valid FoodStatusUpdateData foodStatusUpdate) throws Exception {
+    @PutMapping("/update/{id}")
+    public ResponseEntity<String> update(@PathVariable Long id, @RequestBody @Valid FoodStatusUpdateData foodStatusUpdate) {
 
-        var foodStatus = this.foodStatusRepository.findById(foodStatusUpdate.id())
-                .orElseThrow(() -> new Exception("Status da comida não foi encontrado."));
+        if(!this.foodStatusRepository.existsById(id)){
+            return ResponseEntity.notFound().build();
+        }
+
+        var foodStatus = this.foodStatusRepository.getReferenceById(id);
 
         if(!foodStatus.updateData(foodStatusUpdate)){
-
             return ResponseEntity.badRequest().body("Não foi possível atualizar os dados. Verifique os parâmetros passados.");
         }
 
@@ -55,7 +59,7 @@ public class FoodStatusController {
     @GetMapping("/find/{shortName}")
     public FoodStatus findFoodStatusByShortName(String shortName) throws Exception {
 
-        FoodStatus foodStatusByshortName  = null;
+        FoodStatus foodStatusByshortName;
 
         if(shortName == null)
             throw new Exception("Não é aceito valores nulos. Informe o nome curto.");
@@ -69,19 +73,12 @@ public class FoodStatusController {
     }
 
     @GetMapping("/find/{id}")
-    public FoodStatus findFoodStatusById(Long id) throws Exception {
+    public ResponseEntity<FoodStatus> findFoodStatusById(@PathVariable long id){
 
-        FoodStatus foodStatusById  = null;
+        Optional<FoodStatus> foodStatusById = this.foodStatusRepository.findById(id);
 
-        if(id == null)
-            throw new Exception("Não é aceito valores nulos");
-
-        foodStatusById = this.foodStatusRepository.getReferenceById(id);
-
-        if(foodStatusById == null)
-            throw new Exception("Não foi encontrado um Status com o id "+ id);
-
-        return  foodStatusById;
+        return foodStatusById.map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build()) ;
     }
 
     @Transactional
