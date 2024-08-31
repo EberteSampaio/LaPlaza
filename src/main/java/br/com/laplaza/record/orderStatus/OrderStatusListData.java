@@ -7,12 +7,13 @@ import java.time.LocalDateTime;
 public record OrderStatusListData(
         Long id,
         String shortName,
+        String description,
         LocalDateTime createdAt,
         LocalDateTime updatedAt
 
 ) {
 
      public OrderStatusListData(OrderStatus orderStatus){
-         this(orderStatus.getId(),orderStatus.getShortName(),orderStatus.getCreatedAt(),orderStatus.getCreatedAt());
+         this(orderStatus.getId(),orderStatus.getShortName(),orderStatus.getDescription(),orderStatus.getCreatedAt(),orderStatus.getCreatedAt());
      }
 }
