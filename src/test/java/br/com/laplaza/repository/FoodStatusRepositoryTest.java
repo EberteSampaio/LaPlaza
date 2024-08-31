@@ -31,7 +31,7 @@ class FoodStatusRepositoryTest {
         FoodStatusRegistrationData newStatus = new FoodStatusRegistrationData("DISP","DISPONIVEL");
         this.createStatusFood(newStatus);
 
-       Optional<FoodStatus> result = Optional.ofNullable(this.foodStatusRepository.findFoodStatusByShortName(newStatus.shortName()));
+       Optional<FoodStatus> result = Optional.ofNullable(this.foodStatusRepository.getReferenceByShortName(newStatus.shortName()));
 
        assertThat(result.isPresent()).isTrue();
     }
