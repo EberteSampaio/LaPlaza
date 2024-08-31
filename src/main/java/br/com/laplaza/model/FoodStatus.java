@@ -6,6 +6,7 @@ import jakarta.persistence.*;
 import jakarta.validation.Valid;
 import lombok.*;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Table  (name = "food_status")
 @Entity (name = "FoodStatus")
@@ -22,6 +23,8 @@ public class FoodStatus {
     private String description;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
+    @OneToMany(mappedBy = "id_status", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Food> food;
 
 
     public FoodStatus(FoodStatusRegistrationData foodStatus){
