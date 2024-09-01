@@ -8,7 +8,7 @@ import lombok.*;
 import java.time.LocalDateTime;
 import java.util.List;
 
-@Table  (name = "food_status")
+@Table(name = "food_status")
 @Entity (name = "FoodStatus")
 @Getter
 @Setter
@@ -16,6 +16,7 @@ import java.util.List;
 @NoArgsConstructor
 @EqualsAndHashCode(of = "id")
 public class FoodStatus {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -23,26 +24,29 @@ public class FoodStatus {
     private String description;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
-    @OneToMany(mappedBy = "id_status", cascade = CascadeType.ALL, orphanRemoval = true)
+
+    @OneToMany(mappedBy = "idStatus", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Food> food;
 
+    public FoodStatus(Long id) {
+        this.id = id;
+    }
 
-    public FoodStatus(FoodStatusRegistrationData foodStatus){
-        this.setShortName(foodStatus.shortName());
-        this.setDescription(foodStatus.description());
-        this.setCreatedAt(LocalDateTime.now());
-        this.setUpdatedAt(LocalDateTime.now());
+    public FoodStatus(FoodStatusRegistrationData foodStatus) {
+        this.shortName = foodStatus.shortName();
+        this.description = foodStatus.description();
+        this.createdAt = LocalDateTime.now();
+        this.updatedAt = LocalDateTime.now();
     }
 
     public boolean updateData(@Valid FoodStatusUpdateData foodStatusUpdate) {
-
-        if((foodStatusUpdate.shortName() == null) || (foodStatusUpdate.description() == null)){
+        if (foodStatusUpdate.shortName() == null || foodStatusUpdate.description() == null) {
             return false;
         }
 
-        this.setShortName(foodStatusUpdate.shortName());
-        this.setDescription(foodStatusUpdate.description());
-        this.setUpdatedAt(LocalDateTime.now());
+        this.shortName = foodStatusUpdate.shortName();
+        this.description = foodStatusUpdate.description();
+        this.updatedAt = LocalDateTime.now();
 
         return true;
     }

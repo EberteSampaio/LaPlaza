@@ -56,7 +56,7 @@ public class FoodStatusController {
         return ResponseEntity.ok("Os dados do status da comida foram atualizados.");
     }
 
-    @GetMapping("/find/{shortName}")
+    @GetMapping("/find-short/{shortName}")
     public FoodStatus findFoodStatusByShortName(String shortName) throws Exception {
 
         FoodStatus foodStatusByshortName;
@@ -76,7 +76,9 @@ public class FoodStatusController {
     public ResponseEntity<FoodStatus> findFoodStatusById(@PathVariable long id){
 
         Optional<FoodStatus> foodStatusById = this.foodStatusRepository.findById(id);
-
+        if(foodStatusById.isEmpty()){
+            return ResponseEntity.badRequest().build();
+        }
         return foodStatusById.map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.notFound().build()) ;
     }
